@@ -3,6 +3,7 @@ package gin
 import (
 	"context"
 	"net/http"
+	"os"
 
 	krakendcors "github.com/devopsfaith/krakend-cors"
 	"github.com/devopsfaith/krakend-cors/mux"
@@ -58,6 +59,9 @@ func NewRunServer(next RunServer) RunServer {
 // incoming request
 func NewRunServerWithLogger(next RunServer, l logging.Logger) RunServer {
 	return func(ctx context.Context, cfg config.ServiceConfig, handler http.Handler) error {
+
+		l, _ := logging.NewLogger("DEBUG", os.Stdout, "")
+
 		corsMw := mux.NewWithLogger(cfg.ExtraConfig, l)
 		if corsMw == nil {
 			return next(ctx, cfg, handler)
